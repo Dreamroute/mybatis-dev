@@ -6,16 +6,25 @@
 
 	<!-- insert -->
 	<insert id="insertUser" parameterType="user">
-        <selectKey keyColumn="id" keyProperty="id" order="AFTER" resultType="long" statementType="PREPARED">
-            SELECT LAST_INSERT_ID()  
-        </selectKey>
-        insert into user (name, password) values (#{name}, #{password})
+		<selectKey keyColumn="id" keyProperty="id" order="AFTER" resultType="long" statementType="PREPARED">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into user (name, password) values (#{name}, #{password})
 	</insert>
 
 	<!-- select by id -->
 	<select id="selectById" resultMap="userMap" useCache="false" resultOrdered="true">
 		select * from user where id = #{id}
 	</select>
+
+	<!-- selectByMap -->
+	<select id="selectByMap" resultMap="userMap" parameterMap="idMap">
+		select * from user where id = #{id}
+	</select>
+	
+	<parameterMap type="hashmap" id="idMap">
+	   <parameter property="id"/>
+	</parameterMap>
 
 	<resultMap type="user" id="userMap" autoMapping="true">
 		<id column="id" property="id" />
