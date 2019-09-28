@@ -23,11 +23,12 @@ public class CrudTest {
             String resource = "conf/config.xml";
             InputStream in = Resources.getResourceAsStream(resource);
             SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(in);
-            SqlSession sqlSession = sqlSessionFactory.openSession(true);
+            SqlSession sqlSession = sqlSessionFactory.openSession(false);
             User user = User.builder().name("w.dehai").password("123456").build();
             int result = sqlSession.insert("com.github.dreamroute.mybatis.fly.mapper.UserMapper.insertUser", user);
             // int result = sqlSession.getMapper(UserMapper.class).insert(user);
             System.err.println(result);
+            sqlSession.commit();
 
             RowBounds bounds = new RowBounds(0, 10);
             System.err.println(bounds);

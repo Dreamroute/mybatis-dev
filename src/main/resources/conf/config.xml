@@ -12,6 +12,11 @@
 		<plugin interceptor="com.github.dreamroute.sqlprinter.interceptor.SqlPrinter">
 			<property name="type" value="error" />
 		</plugin>
+		<plugin interceptor="com.github.dreamroute.fastfail.interceptor.FastFail">
+            <property name="insert" value="新增失败" />
+            <property name="update" value="修改失败" />
+            <property name="delete" value="删除失败" />
+		</plugin>
 	</plugins>
 
 	<environments default="development">
