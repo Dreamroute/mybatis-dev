@@ -1,17 +1,27 @@
 package com.github.dreamroute.mybatis.fly;
 
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.apache.ibatis.executor.resultset.ResultSetWrapper;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.parsing.XNode;
+import org.apache.ibatis.parsing.XPathParser;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.ibatis.type.JdbcType;
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 import com.github.dreamroute.mybatis.fly.domain.User;
 
@@ -76,6 +86,39 @@ public class CrudTest {
     public void resultSetWrapperTest() throws Exception {
         ResultSetWrapper rsw = new ResultSetWrapper(null, null);
         System.err.println(rsw);
+    }
+    
+    @Test
+    public void mmmmmmmm() throws Exception {
+        InputStream in = Resources.getResourceAsStream("user.xml");
+        InputSource source = new InputSource(in);
+        Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(source);
+        NodeList children = doc.getChildNodes();
+        if (children.getLength() > 0) {
+            for (int i=0, len = children.getLength(); i< len; i++) {
+                Node child = children.item(i);
+                NodeList userAttr = child.getChildNodes();
+                if (userAttr.getLength() > 0) {
+                    for (int j=0, length = userAttr.getLength(); j<length; j++) {
+                        Node attr = userAttr.item(j);
+                        System.err.println(attr.getNodeName() + "[" + attr.getNodeType() + "]: " + attr.getTextContent());
+                    }
+                }
+            }
+        }
+        
+        XPathParser parser = new XPathParser(doc);
+        XNode userNode = parser.evalNode("user");
+        String ident = userNode.getValueBasedIdentifier();
+        System.err.println(ident);
+        String id = userNode.evalString("id");
+        System.err.println(id);
+    }
+    
+    @Test
+    public void mq() {
+        JdbcType vc = JdbcType.valueOf("VARCHAR");
+        System.err.println(vc);
     }
 
 }
