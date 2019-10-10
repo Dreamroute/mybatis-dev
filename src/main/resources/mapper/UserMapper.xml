@@ -8,15 +8,19 @@
 
 	<!-- insert -->
 	<insert id="insertUser" parameterType="user">
-		<selectKey keyColumn="id" keyProperty="id" order="AFTER" resultType="long" statementType="PREPARED">
+		<!-- <selectKey keyColumn="id" keyProperty="id" order="AFTER" resultType="long" statementType="PREPARED">
 			SELECT LAST_INSERT_ID()
-		</selectKey>
+		</selectKey> -->
 		insert into user (name, password) values (#{name}, #{password})
 	</insert>
 
 	<!-- select by id -->
 	<select id="selectById" resultMap="userMap" useCache="false" resultOrdered="true">
-		select * from user where id = #{id}
+		select * from user 
+		<where>
+		  1 = 1
+		</where>
+		and id = #{id}
 	</select>
 
 	<!-- selectByMap -->
