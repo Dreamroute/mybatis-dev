@@ -156,14 +156,6 @@
             <version>8.0.17</version>
         </dependency>
         
-        <!-- fastfail插件开始 -->
-        <dependency>
-            <groupId>com.github.dreamroute</groupId>
-            <artifactId>fastfail</artifactId>
-            <version>1.0-RELEASE</version>
-        </dependency>
-        <!-- fastfail插件开始 -->
-
         <!-- sqlprinter插件 开始 -->
         <dependency>
             <groupId>com.github.dreamroute</groupId>
