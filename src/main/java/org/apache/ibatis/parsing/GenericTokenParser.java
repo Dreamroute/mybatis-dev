@@ -34,11 +34,13 @@ public class GenericTokenParser {
     if (text == null || text.isEmpty()) {
       return "";
     }
+    
     // search open token
     int start = text.indexOf(openToken);
     if (start == -1) {
       return text;
     }
+    
     char[] src = text.toCharArray();
     int offset = 0;
     final StringBuilder builder = new StringBuilder();

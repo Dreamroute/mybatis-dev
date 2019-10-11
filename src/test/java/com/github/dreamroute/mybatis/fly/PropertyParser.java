@@ -11,9 +11,10 @@ public class PropertyParser {
     /**
      * The special property key that indicate whether enable a default value on placeholder.
      * <p>
-     *   The default value is {@code false} (indicate disable a default value on placeholder)
-     *   If you specify the {@code true}, you can specify key and default value on placeholder (e.g. {@code ${db.username:postgres}}).
+     * The default value is {@code false} (indicate disable a default value on placeholder) If you specify the {@code true}, you can specify key and default value on placeholder (e.g.
+     * {@code ${db.username:postgres}}).
      * </p>
+     * 
      * @since 3.4.2
      */
     public static final String KEY_ENABLE_DEFAULT_VALUE = KEY_PREFIX + "enable-default-value";
@@ -21,8 +22,9 @@ public class PropertyParser {
     /**
      * The special property key that specify a separator for key and default value on placeholder.
      * <p>
-     *   The default separator is {@code ":"}.
+     * The default separator is {@code ":"}.
      * </p>
+     * 
      * @since 3.4.2
      */
     public static final String KEY_DEFAULT_VALUE_SEPARATOR = KEY_PREFIX + "default-value-separator";
@@ -31,51 +33,63 @@ public class PropertyParser {
     private static final String DEFAULT_VALUE_SEPARATOR = ":";
 
     private PropertyParser() {
-      // Prevent Instantiation
+        // Prevent Instantiation
     }
 
     public static String parse(String string, Properties variables) {
-      VariableTokenHandler handler = new VariableTokenHandler(variables);
-      GenericTokenParser parser = new GenericTokenParser("${", "}", handler);
-      return parser.parse(string);
+        VariableTokenHandler handler = new VariableTokenHandler(variables);
+        GenericTokenParser parser = new GenericTokenParser("${", "}", handler);
+        return parser.parse(string);
     }
 
     private static class VariableTokenHandler implements TokenHandler {
-      private final Properties variables;
-      private final boolean enableDefaultValue;
-      private final String defaultValueSeparator;
+        private final Properties variables;
+        private final boolean enableDefaultValue;
+        private final String defaultValueSeparator;
 
-      private VariableTokenHandler(Properties variables) {
-        this.variables = variables;
-        this.enableDefaultValue = Boolean.parseBoolean(getPropertyValue(KEY_ENABLE_DEFAULT_VALUE, ENABLE_DEFAULT_VALUE));
-        this.defaultValueSeparator = getPropertyValue(KEY_DEFAULT_VALUE_SEPARATOR, DEFAULT_VALUE_SEPARATOR);
-      }
-
-      private String getPropertyValue(String key, String defaultValue) {
-        return (variables == null) ? defaultValue : variables.getProperty(key, defaultValue);
-      }
-
-      @Override
-      public String handleToken(String content) {
-        if (variables != null) {
-          String key = content;
-          if (enableDefaultValue) {
-            final int separatorIndex = content.indexOf(defaultValueSeparator);
-            String defaultValue = null;
-            if (separatorIndex >= 0) {
-              key = content.substring(0, separatorIndex);
-              defaultValue = content.substring(separatorIndex + defaultValueSeparator.length());
-            }
-            if (defaultValue != null) {
-              return variables.getProperty(key, defaultValue);
-            }
-          }
-          if (variables.containsKey(key)) {
-            return variables.getProperty(key);
-          }
+        private VariableTokenHandler(Properties variables) {
+            this.variables = variables;
+            this.enableDefaultValue = Boolean.parseBoolean(getPropertyValue(KEY_ENABLE_DEFAULT_VALUE, ENABLE_DEFAULT_VALUE));
+            this.defaultValueSeparator = getPropertyValue(KEY_DEFAULT_VALUE_SEPARATOR, DEFAULT_VALUE_SEPARATOR);
         }
-        return "${" + content + "}";
-      }
+
+        private String getPropertyValue(String key, String defaultValue) {
+            return (variables == null) ? defaultValue : variables.getProperty(key, defaultValue);
+        }
+
+        @Override
+        public String handleToken(String content) {
+            if (variables != null) {
+                String key = content;
+                if (enableDefaultValue) {
+                    final int separatorIndex = content.indexOf(defaultValueSeparator);
+                    String defaultValue = null;
+                    if (separatorIndex >= 0) {
+                        key = content.substring(0, separatorIndex);
+                        defaultValue = content.substring(separatorIndex + defaultValueSeparator.length());
+                    }
+                    if (defaultValue != null) {
+                        return variables.getProperty(key, defaultValue);
+                    }
+                }
+                if (variables.containsKey(key)) {
+                    return variables.getProperty(key);
+                }
+            }
+            return "${" + content + "}";
+        }
+    }
+    
+    public static void main(String[] args) {
+        Properties props = new Properties();
+        props.setProperty("name", "w.dehai");
+        props.setProperty("password", "123456");
+        String name = PropertyParser.parse("name: ${name1}, password: ${password}", props);
+        System.err.println(name);
+        
+        TokenHandler handler = new VariableTokenHandler(props);
+        String value = handler.handleToken("name");
+        System.err.println(value);
     }
 
-  }
+}
