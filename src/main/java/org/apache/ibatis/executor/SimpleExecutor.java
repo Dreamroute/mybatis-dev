@@ -52,6 +52,14 @@ public class SimpleExecutor extends BaseExecutor {
       closeStatement(stmt);
     }
   }
+  
+  private Statement prepareStatement(StatementHandler handler, Log statementLog) throws SQLException {
+      Statement stmt;
+      Connection connection = getConnection(statementLog);
+      stmt = handler.prepare(connection, transaction.getTimeout());
+      handler.parameterize(stmt);
+      return stmt;
+    }
 
   @Override
   public <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) throws SQLException {
@@ -79,14 +87,6 @@ public class SimpleExecutor extends BaseExecutor {
   @Override
   public List<BatchResult> doFlushStatements(boolean isRollback) {
     return Collections.emptyList();
-  }
-
-  private Statement prepareStatement(StatementHandler handler, Log statementLog) throws SQLException {
-    Statement stmt;
-    Connection connection = getConnection(statementLog);
-    stmt = handler.prepare(connection, transaction.getTimeout());
-    handler.parameterize(stmt);
-    return stmt;
   }
 
 }

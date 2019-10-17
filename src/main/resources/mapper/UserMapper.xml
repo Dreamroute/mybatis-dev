@@ -8,9 +8,9 @@
 
 	<!-- insert -->
 	<insert id="insertUser" parameterType="user">
-		<!-- <selectKey keyColumn="id" keyProperty="id" order="AFTER" resultType="long" statementType="PREPARED">
+		<selectKey keyColumn="id" keyProperty="id" order="AFTER" resultType="long" statementType="PREPARED">
 			SELECT LAST_INSERT_ID()
-		</selectKey> -->
+		</selectKey>
 		insert into user (name, password) values (#{name}, #{password})
 	</insert>
 
