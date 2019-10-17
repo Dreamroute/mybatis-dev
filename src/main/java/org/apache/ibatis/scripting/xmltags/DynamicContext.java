@@ -74,7 +74,7 @@ public class DynamicContext {
     return uniqueNumber++;
   }
 
-  static class ContextMap extends HashMap<String, Object> {
+  public static class ContextMap extends HashMap<String, Object> {
     private static final long serialVersionUID = 2977601501966151582L;
     private final MetaObject parameterMetaObject;
     private final boolean fallbackParameterObject;

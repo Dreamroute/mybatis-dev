@@ -28,7 +28,7 @@
 		<!-- <selectKey keyColumn="id" keyProperty="id" order="AFTER" resultType="long" statementType="PREPARED">
 			SELECT LAST_INSERT_ID()
 		</selectKey> -->
-		insert into user (name, password) values (#{name}, #{password})
+		insert into user (name, password) values (${name}, ${password})
 	</insert>
 
 	<!-- select by id -->

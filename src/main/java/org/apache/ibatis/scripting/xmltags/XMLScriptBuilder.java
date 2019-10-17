@@ -82,6 +82,8 @@ public class XMLScriptBuilder extends BaseBuilder {
       if (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE || child.getNode().getNodeType() == Node.TEXT_NODE) {
         String data = child.getStringBody("");
         TextSqlNode textSqlNode = new TextSqlNode(data);
+        // 如果sql中存在${}那么就属于dynamic sql-node
+        // 另外，如果包含了子标签比如<where>, <if>标签的sql也属于dynamic sql-node
         if (textSqlNode.isDynamic()) {
           contents.add(textSqlNode);
           isDynamic = true;

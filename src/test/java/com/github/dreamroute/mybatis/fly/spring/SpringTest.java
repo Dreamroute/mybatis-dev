@@ -17,6 +17,8 @@ package com.github.dreamroute.mybatis.fly.spring;
 
 import java.util.List;
 
+import org.apache.ibatis.scripting.xmltags.DynamicContext;
+import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.jupiter.api.Test;
@@ -25,10 +27,24 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.github.dreamroute.mybatis.fly.domain.User;
 import com.github.dreamroute.mybatis.fly.mapper.UserMapper;
 
+import ognl.Ognl;
+
 public class SpringTest {
     
     @Test
-    public void firstTest() {
+    public void insertUserTest() {
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
+        SqlSessionFactory sqlSessionFactory = context.getBean(SqlSessionFactory.class);
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+        User user = new User(null, "w.dehai", "3333");
+        int result = userMapper.insertUser(user);
+        System.err.println(result);
+        context.close();
+    }
+    
+    @Test
+    public void selectByIdTest() {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
         SqlSessionFactory sqlSessionFactory = context.getBean(SqlSessionFactory.class);
         SqlSession sqlSession = sqlSessionFactory.openSession();
@@ -36,6 +52,14 @@ public class SpringTest {
         List<User> users = userMapper.selectById(1L);
         System.err.println(users);
         context.close();
+    }
+    
+    @Test
+    public void ognlTest() throws Exception {
+        User user = new User(100L, "w.dehai", "123456");
+        DynamicContext.ContextMap context = new DynamicContext.ContextMap(new Configuration().newMetaObject(user), false);
+        Object v = Ognl.getValue("name", context, user);
+        System.err.println(v);
     }
 
 }
