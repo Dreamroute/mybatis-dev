@@ -215,6 +215,25 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     return collapseSingleResultList(multipleResults);
   }
 
+  private void handleResultSet(ResultSetWrapper rsw, ResultMap resultMap, List<Object> multipleResults, ResultMapping parentMapping) throws SQLException {
+    try {
+      if (parentMapping != null) {
+        handleRowValues(rsw, resultMap, null, RowBounds.DEFAULT, parentMapping);
+      } else {
+        if (resultHandler == null) {
+          DefaultResultHandler defaultResultHandler = new DefaultResultHandler(objectFactory);
+          handleRowValues(rsw, resultMap, defaultResultHandler, rowBounds, null);
+          multipleResults.add(defaultResultHandler.getResultList());
+        } else {
+          handleRowValues(rsw, resultMap, resultHandler, rowBounds, null);
+        }
+      }
+    } finally {
+      // issue #228 (close resultsets)
+      closeResultSet(rsw.getResultSet());
+    }
+  }
+
   @Override
   public <E> Cursor<E> handleCursorResultSets(Statement stmt) throws SQLException {
     ErrorContext.instance().activity("handling cursor results").object(mappedStatement.getId());
@@ -288,25 +307,6 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     if (rsw != null && resultMapCount < 1) {
       throw new ExecutorException("A query was run and no Result Maps were found for the Mapped Statement '" + mappedStatement.getId()
           + "'.  It's likely that neither a Result Type nor a Result Map was specified.");
-    }
-  }
-
-  private void handleResultSet(ResultSetWrapper rsw, ResultMap resultMap, List<Object> multipleResults, ResultMapping parentMapping) throws SQLException {
-    try {
-      if (parentMapping != null) {
-        handleRowValues(rsw, resultMap, null, RowBounds.DEFAULT, parentMapping);
-      } else {
-        if (resultHandler == null) {
-          DefaultResultHandler defaultResultHandler = new DefaultResultHandler(objectFactory);
-          handleRowValues(rsw, resultMap, defaultResultHandler, rowBounds, null);
-          multipleResults.add(defaultResultHandler.getResultList());
-        } else {
-          handleRowValues(rsw, resultMap, resultHandler, rowBounds, null);
-        }
-      }
-    } finally {
-      // issue #228 (close resultsets)
-      closeResultSet(rsw.getResultSet());
     }
   }
 

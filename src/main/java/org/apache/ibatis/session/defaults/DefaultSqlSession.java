@@ -173,6 +173,22 @@ public class DefaultSqlSession implements SqlSession {
       ErrorContext.instance().reset();
     }
   }
+  
+  private Object wrapCollection(final Object object) {
+    if (object instanceof Collection) {
+      StrictMap<Object> map = new StrictMap<>();
+      map.put("collection", object);
+      if (object instanceof List) {
+        map.put("list", object);
+      }
+      return map;
+    } else if (object != null && object.getClass().isArray()) {
+      StrictMap<Object> map = new StrictMap<>();
+      map.put("array", object);
+      return map;
+    }
+    return object;
+  }
 
   @Override
   public int insert(String statement) {
@@ -201,22 +217,6 @@ public class DefaultSqlSession implements SqlSession {
       ErrorContext.instance().reset();
     }
   }
-  
-  private Object wrapCollection(final Object object) {
-      if (object instanceof Collection) {
-        StrictMap<Object> map = new StrictMap<>();
-        map.put("collection", object);
-        if (object instanceof List) {
-          map.put("list", object);
-        }
-        return map;
-      } else if (object != null && object.getClass().isArray()) {
-        StrictMap<Object> map = new StrictMap<>();
-        map.put("array", object);
-        return map;
-      }
-      return object;
-    }
 
   @Override
   public int delete(String statement) {
