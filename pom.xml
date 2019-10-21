@@ -160,7 +160,7 @@
         <dependency>
             <groupId>com.github.dreamroute</groupId>
             <artifactId>sqlprinter</artifactId>
-            <version>1.5.1-RELEASE</version>
+            <version>1.5.2-RELEASE</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.mybatis</groupId>

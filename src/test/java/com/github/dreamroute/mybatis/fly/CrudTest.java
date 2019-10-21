@@ -1,6 +1,9 @@
 package com.github.dreamroute.mybatis.fly;
 
 import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +63,20 @@ public class CrudTest {
             // UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             // List<User> users = userMapper.selectById(1L);
             System.err.println(users);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void selectUserByIdTest() {
+        try {
+            String resource = "conf/config.xml";
+            InputStream in = Resources.getResourceAsStream(resource);
+            SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(in);
+            SqlSession sqlSession = sqlSessionFactory.openSession(true);
+             User result = sqlSession.selectOne("com.github.dreamroute.mybatis.fly.mapper.UserMapper.selectUserById", 1L);
+             System.err.println(result);
         } catch (Exception e) {
             e.printStackTrace();
         }
