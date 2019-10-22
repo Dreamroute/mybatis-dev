@@ -2,6 +2,8 @@ package com.github.dreamroute.mybatis.fly.reflector;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,6 +40,18 @@ public class MetaClassTest {
         MetaObject mm = SystemMetaObject.forObject(map);
         mm.setValue("name", "w.dehai");
         System.err.println(map);
+    }
+    
+    @Test
+    public void proxyTest() {
+        
+        InvocationHandler handler = (proxy, method, args) -> {
+            System.err.println("我们自己的逻辑");
+            return null;
+        };
+        
+        Car audi = (Car) Proxy.newProxyInstance(Car.class.getClassLoader(), new Class<?>[] {Car.class}, handler);
+        audi.drive();
     }
 
 }
